@@ -1,0 +1,55 @@
+:root {
+  /* Colores Principales */
+  --color-primary: #1e40af;      /* Azul marino */
+  --color-primary-dark: #1e3a8a; /* Azul marino oscuro */
+  --color-primary-light: #3b82f6; /* Azul más claro para hover */
+  
+  --color-secondary: #dc2626;     /* Rojo corporativo */
+  --color-secondary-dark: #b91c1c;
+  
+  --color-accent: #fbbf24;        /* Dorado */
+  --color-accent-dark: #f59e0b;
+  
+  /* Colores de Estado */
+  --color-success: #059669;       /* Verde esmeralda */
+  --color-warning: #f59e0b;       /* Ámbar */
+  --color-danger: #dc2626;        /* Rojo */
+  
+  /* Gradientes */
+  --gradient-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  --gradient-accent: linear-gradient(135deg, #dc2626 0%, #fbbf24 100%);
+  
+  /* Fondos */
+  --bg-main: #f3f4f6;            /* Gris claro */
+  --bg-white: #ffffff;
+  --bg-dark: #1f2937;            /* Gris oscuro */
+  
+  /* Texto */
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-light: #9ca3af;
+  
+  /* Sombras */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
