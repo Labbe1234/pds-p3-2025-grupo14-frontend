@@ -51,24 +51,40 @@ const ClasesPage = () => {
       if (editingClass) {
         setSavingProgress('Actualizando clase...')
         
-        // Actualizar clase existente
         const updateData: Partial<ClassData> = {
           name: className,
           subject: subject,
           level: level as 'basico' | 'intermedio' | 'avanzado',
         }
-        
+
+        // ¿Hay archivo nuevo?
+        const hasNewFile = !!file
         if (file) {
           updateData.file = file
-          setSavingProgress('Procesando archivo...')
+          setSavingProgress('Subiendo y procesando archivo...')
         }
-        
+
+        // Actualizar en backend
         const updatedClass = await classesAPI.update(editingClass.id, updateData)
-        
-        setClasses(classes.map(c => c.id === editingClass.id ? updatedClass : c))
+
+        let finalClass = updatedClass
+
+        // 👇 Si hubo archivo nuevo, esperamos a que se procesen los slides
+        if (hasNewFile) {
+          const classWithSlides = await waitForSlides(updatedClass.id)
+          if (classWithSlides) {
+            finalClass = classWithSlides
+            setSavingProgress('Presentación procesada correctamente ✅')
+          } else {
+            setSavingProgress('Clase actualizada. Los slides se siguen procesando...')
+          }
+        }
+
+        // Actualizar lista en pantalla
+        setClasses(classes.map(c => c.id === editingClass.id ? finalClass : c))
         alert(`Clase "${className}" actualizada exitosamente!`)
         resetForm()
-        
+
       } else {
         setSavingProgress('Creando clase...')
         
@@ -112,16 +128,31 @@ const ClasesPage = () => {
     }
   }
 
-  const waitForSlides = async (claseId: string, maxAttempts = 10) => {
+  const waitForSlides = async (
+    claseId: string,
+    timeoutMs = 90000,      // ⏱️ tiempo máximo total: 90s
+    intervalMs = 3000       // 🔁 intervalo entre consultas: 3s
+  ) => {
+    const maxAttempts = Math.ceil(timeoutMs / intervalMs)
+
     for (let i = 0; i < maxAttempts; i++) {
       setSavingProgress(`Esperando slides... (${i + 1}/${maxAttempts})`)
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
-      const updatedClass = await classesAPI.getOne(claseId)
-      if (updatedClass && updatedClass.slides_count && updatedClass.slides_count > 0) {
-        return updatedClass
+
+      // Esperar antes de preguntar de nuevo
+      await new Promise(resolve => setTimeout(resolve, intervalMs))
+
+      try {
+        const updatedClass = await classesAPI.getOne(claseId)
+        if (updatedClass && updatedClass.slides_count && updatedClass.slides_count > 0) {
+          return updatedClass
+        }
+      } catch (error) {
+        console.error('Error al hacer polling de slides:', error)
+        // Si hay error puntual seguimos intentando, salvo que quieras cortar en 404, etc.
       }
     }
+
+    // Si llegamos aquí, no se generaron slides dentro del timeout
     return null
   }
 
