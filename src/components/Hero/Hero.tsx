@@ -11,7 +11,7 @@ const Hero = () => {
   return (
     <section className="hero">
       <div className="hero-content">
-        <h1 className="hero-title">Bienvenido a <span className='hero-highlight'>ClaseSync</span></h1>
+        <h1 className="hero-title">Bienvenidos a <span className='hero-highlight'>ClaseSync</span></h1>
         <p className="hero-subtitle">
           Gestiona tus presentaciones de clase de forma sencilla y efectiva
         </p>
