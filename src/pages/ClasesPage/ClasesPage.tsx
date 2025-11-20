@@ -136,7 +136,7 @@ const ClasesPage = () => {
     const maxAttempts = Math.ceil(timeoutMs / intervalMs)
 
     for (let i = 0; i < maxAttempts; i++) {
-      setSavingProgress(`Esperando slides... (${i + 1}/${maxAttempts})`)
+      setSavingProgress(`V2 Esperando slides... (${i + 1}/${maxAttempts})`)
 
       // Esperar antes de preguntar de nuevo
       await new Promise(resolve => setTimeout(resolve, intervalMs))
