@@ -24,15 +24,16 @@ const Cards = () => {
           <p>Crea y gestiona tus clases de forma sencilla.</p>
           <button className="card-link-btn">Ir a Clases →</button>
         </div>
-        
-        <div className="card">
+
+        <div className="card card-clickable" onClick={() => navigate('/reports')}>
           <div className="card-icon">
             <ClipboardList size={48} strokeWidth={2} />
           </div>
           <h3>REGISTRO DE TUS CLASES</h3>
           <p>Lleva un registro completo de todas tus clases y su progreso.</p>
+          <button className="card-link-btn">Ver Reportes →</button>
         </div>
-        
+
         <div className="card">
           <div className="card-icon">
             <GraduationCap size={48} strokeWidth={2} />

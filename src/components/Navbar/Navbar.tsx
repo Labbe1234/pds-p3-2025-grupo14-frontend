@@ -60,6 +60,12 @@ const Navbar = () => {
           >
             Mis Clases
           </button>
+          <button
+            className={`navbar-link ${isActive('/reports') ? 'active' : ''}`}
+            onClick={() => handleNavigation('/reports')}
+          >
+            Reportes
+          </button>
 
           {/* Usuario info */}
           <div className="navbar-user">
