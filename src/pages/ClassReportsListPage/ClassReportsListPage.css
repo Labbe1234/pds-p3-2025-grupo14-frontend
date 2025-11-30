@@ -1,0 +1,127 @@
+.reports-list-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.reports-list-header {
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+.reports-list-header h1 {
+    font-size: 2.5rem;
+    color: #111827;
+    margin-bottom: 0.5rem;
+}
+
+.reports-list-header p {
+    color: #6b7280;
+    font-size: 1.1rem;
+}
+
+.sessions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.session-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.session-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.session-card-header {
+    padding: 1.5rem;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.session-card-header h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    color: #1f2937;
+}
+
+.subject-badge {
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.session-card-body {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.session-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #4b5563;
+    font-size: 0.95rem;
+}
+
+.session-card-footer {
+    padding: 1rem 1.5rem;
+    background: #f3f4f6;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #2563eb;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.no-sessions {
+    text-align: center;
+    padding: 4rem;
+    color: #9ca3af;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.no-sessions p {
+    font-size: 1.2rem;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.reports-list-loading,
+.reports-list-error {
+    text-align: center;
+    padding: 4rem;
+    font-size: 1.2rem;
+    color: #6b7280;
+}

@@ -165,6 +165,16 @@ export const classesAPI = {
     }
     await api.delete(`/clases/${id}`)
   },
+
+  // ✅ NUEVO MÉTODO: Sincronizar slide actual
+  sync: async (id: string, currentSlide: number, totalSlides: number, sessionId?: number): Promise<void> => {
+    if (USE_MOCK) return
+    await api.post(`/clases/${id}/sync`, {
+      current_slide: currentSlide,
+      total_slides: totalSlides,
+      session_id: sessionId
+    })
+  },
 }
 
 export const slidesAPI = {
@@ -182,6 +192,36 @@ export const slidesAPI = {
 export const authAPI = {
   googleLogin: async (credential: string) => {
     const response = await api.post('/auth/google', { credential })
+    return response.data
+  },
+
+  generateTelegramToken: async () => {
+    const response = await api.post('/users/generate_telegram_token')
+    return response.data
+  }
+}
+
+export const sessionsAPI = {
+  create: async (classId: string): Promise<{ id: number, start_time: string }> => {
+    if (USE_MOCK) return { id: 123, start_time: new Date().toISOString() }
+    const response = await api.post(`/clases/${classId}/sessions`)
+    return response.data
+  },
+
+  end: async (sessionId: number): Promise<void> => {
+    if (USE_MOCK) return
+    await api.patch(`/sessions/${sessionId}`)
+  },
+
+  getReport: async (sessionId: number): Promise<any> => {
+    if (USE_MOCK) return {}
+    const response = await api.get(`/sessions/${sessionId}`)
+    return response.data
+  },
+
+  getAll: async (): Promise<any[]> => {
+    if (USE_MOCK) return []
+    const response = await api.get('/sessions')
     return response.data
   }
 }

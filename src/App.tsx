@@ -7,6 +7,8 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import HomePage from './pages/HomePage/HomePage';
 import ClasesPage from './pages/ClasesPage/ClasesPage';
 import PresentationPage from './pages/PresentationPage/PresentationPage';
+import ClassReportPage from './pages/ClassReportPage/ClassReportPage';
+import ClassReportsListPage from './pages/ClassReportsListPage/ClassReportsListPage';
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
 
@@ -20,7 +22,7 @@ function App() {
           <h1>⚠️ Error de Configuración</h1>
           <p>VITE_GOOGLE_CLIENT_ID no está configurado en .env.local</p>
           <pre className="error-code">
-{`VITE_GOOGLE_CLIENT_ID=tu-client-id-aqui
+            {`VITE_GOOGLE_CLIENT_ID=tu-client-id-aqui
 VITE_API_URL=http://localhost:3000`}
           </pre>
         </div>
@@ -47,7 +49,7 @@ VITE_API_URL=http://localhost:3000`}
                 </ProtectedRoute>
               }
             />
-            
+
             <Route
               path="/clases"
               element={
@@ -58,13 +60,37 @@ VITE_API_URL=http://localhost:3000`}
                 </ProtectedRoute>
               }
             />
-            
+
             {/* Presentation sin Layout (fullscreen) */}
             <Route
               path="/clases/:id/presentation"
               element={
                 <ProtectedRoute>
                   <PresentationPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Reporte de Clase */}
+            <Route
+              path="/sessions/:sessionId"
+              element={
+                <ProtectedRoute>
+                  <AppLayout>
+                    <ClassReportPage />
+                  </AppLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Lista de Reportes */}
+            <Route
+              path="/reports"
+              element={
+                <ProtectedRoute>
+                  <AppLayout>
+                    <ClassReportsListPage />
+                  </AppLayout>
                 </ProtectedRoute>
               }
             />
