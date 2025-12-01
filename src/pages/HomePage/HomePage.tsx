@@ -9,16 +9,24 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false);
 
   const handleConnectTelegram = async () => {
+    // Abrir ventana inmediatamente para evitar bloqueo de popups
+    const newWindow = window.open('', '_blank');
+    if (newWindow) {
+      newWindow.document.write('<div style="font-family:sans-serif;text-align:center;margin-top:20px;">Generando enlace de Telegram...</div>');
+    }
+
     try {
       setLoading(true);
       const data = await authAPI.generateTelegramToken();
-      if (data.deep_link) {
-        window.open(data.deep_link, '_blank');
+      if (data.deep_link && newWindow) {
+        newWindow.location.href = data.deep_link;
       } else {
+        newWindow?.close();
         alert('Error al generar el enlace de Telegram');
       }
     } catch (error) {
       console.error('Error connecting Telegram:', error);
+      newWindow?.close();
       alert('Error al conectar con Telegram');
     } finally {
       setLoading(false);
