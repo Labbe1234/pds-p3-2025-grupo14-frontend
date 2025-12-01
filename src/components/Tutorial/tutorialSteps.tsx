@@ -200,7 +200,7 @@ export const tutorialSteps: Step[] = [
 
   // ========== TELEGRAM INTEGRATION (Pasos 13-17) - NUEVA ESTRUCTURA ==========
 
-  // PASO 13: Botón de Telegram (🔧 ARREGLADO: placement y scroll)
+  // PASO 13: Botón de Telegram (🔧 ARREGLADO: z-index y placement)
   {
     target: '.telegram-floating-btn',
     content: (
@@ -230,17 +230,21 @@ export const tutorialSteps: Step[] = [
         </p>
       </div>
     ),
-    placement: 'right', // 🔧 CAMBIO: 'right' para que el tooltip esté al lado del botón
+    placement: 'top', // 🔧 CAMBIO CRÍTICO: 'top' en vez de 'right'
     disableBeacon: true,
     spotlightClicks: false,
-    disableScrolling: true, // 🔧 CRÍTICO: Desactivar scroll en este paso
+    disableScrolling: true,
     styles: {
       options: {
         zIndex: 10000,
       },
+      tooltip: {
+        maxWidth: '400px', // 🆕 Limitar ancho
+      },
     },
     floaterProps: {
       disableAnimation: true,
+      offset: 20, // 🆕 Más separación del botón
     },
   },
 

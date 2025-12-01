@@ -20,12 +20,12 @@ const TutorialWrapper = () => {
       spotlightClicks={false}
       scrollToFirstStep={true}
       scrollOffset={120}
-      disableScrolling={false} // 🔧 CAMBIO: false para permitir scroll automático
-      disableScrollParentFix={false} // 🔧 CAMBIO: false para scroll correcto
+      disableScrolling={false}
+      disableScrollParentFix={false}
       styles={{
         options: {
           primaryColor: '#4F46E5',
-          zIndex: 10000,
+          zIndex: 10000, // 🔧 VERIFICADO: Debe ser mayor que el botón (900)
         },
         tooltip: {
           fontSize: 16,
@@ -47,6 +47,9 @@ const TutorialWrapper = () => {
         },
         spotlight: {
           borderRadius: '8px',
+        },
+        overlay: {
+          backgroundColor: 'rgba(0, 0, 0, 0.5)', // 🆕 Overlay más visible
         },
       }}
       locale={{
