@@ -126,33 +126,41 @@ export const TutorialProvider = ({ children, steps: initialSteps }: TutorialProv
     };
   }, [stepIndex, run]);
 
-  // 🔧 NUEVO: Esperar a que el modal de Telegram se abra (Paso 14)
+  // 🔧 MEJORADO: Esperar a que el modal de Telegram se abra (Paso 14)
   useEffect(() => {
     // Solo activar si estamos en paso 14 y el tutorial está PAUSADO
     if (stepIndex !== 14 || run) return;
 
     console.log('⏳ Paso 14: Esperando a que el modal de Telegram se abra...');
     
-    // Polling para detectar cuando el modal está listo
+    // Polling para detectar cuando el modal está listo Y completamente renderizado
     const checkTelegramModalInterval = setInterval(() => {
       const telegramModal = document.querySelector('.telegram-modal');
+      const qrCanvas = document.querySelector('.telegram-modal canvas'); // 🆕 Verificar que el QR se renderizó
+      const isReady = telegramModal?.getAttribute('data-ready') === 'true'; // 🆕 Verificar estado interno
       
-      if (telegramModal) {
-        console.log('✅ Modal de Telegram abierto y listo, reanudando tutorial en paso 14');
-        clearInterval(checkTelegramModalInterval);
+      // 🆕 Verificar que el modal está visible, el QR cargado y el estado interno es ready
+      if (telegramModal && qrCanvas && isReady) {
+        const isVisible = window.getComputedStyle(telegramModal).opacity !== '0';
         
-        setTimeout(() => {
-          setRun(true);
-        }, 300);
+        if (isVisible) {
+          console.log('✅ Modal de Telegram completamente cargado (con QR y animación terminada), reanudando tutorial en paso 14');
+          clearInterval(checkTelegramModalInterval);
+          
+          // 🆕 Esperar un poco más para asegurar estabilidad visual
+          setTimeout(() => {
+            setRun(true);
+          }, 500); // Aumentado de 300ms a 500ms
+        }
       }
-    }, 100);
+    }, 150); // 🆕 Aumentado de 100ms a 150ms para reducir carga
 
-    // Timeout de seguridad (5 segundos)
+    // 🆕 Timeout aumentado para producción (latencia de red)
     const timeout = setTimeout(() => {
       clearInterval(checkTelegramModalInterval);
-      console.warn('⚠️ Timeout: Modal de Telegram no detectado, reanudando de todas formas');
+      console.warn('⚠️ Timeout: Modal de Telegram no detectado después de 10 segundos, reanudando de todas formas');
       setRun(true);
-    }, 5000);
+    }, 10000); // 🆕 Aumentado de 5s a 10s
 
     // Cleanup
     return () => {
@@ -276,7 +284,7 @@ export const TutorialProvider = ({ children, steps: initialSteps }: TutorialProv
       return;
     }
 
-    // 🔧 NUEVO: CASO ESPECIAL: Del paso 13 al 14 (abrir modal de Telegram)
+    // 🔧 CASO ESPECIAL: Del paso 13 al 14 (abrir modal de Telegram)
     if (stepIndex === 13 && nextIndex === 14) {
       console.log('🎯 Transición especial: Paso 13 → 14 (abriendo modal de Telegram)');
       
