@@ -200,7 +200,7 @@ export const tutorialSteps: Step[] = [
 
   // ========== TELEGRAM INTEGRATION (Pasos 13-17) - NUEVA ESTRUCTURA ==========
 
-  // PASO 13: Botón de Telegram (Mostrar para qué sirve)
+  // PASO 13: Botón de Telegram (🔧 ARREGLADO: placement y scroll)
   {
     target: '.telegram-floating-btn',
     content: (
@@ -210,40 +210,30 @@ export const tutorialSteps: Step[] = [
         
         <div style={{
           background: '#EEF2FF',
-          padding: '15px',
+          padding: '12px',
           borderRadius: '8px',
-          marginTop: '15px',
+          marginTop: '12px',
           border: '2px solid #4F46E5'
         }}>
-          <p style={{ margin: 0, fontWeight: 'bold', color: '#4F46E5' }}>
+          <p style={{ margin: 0, fontWeight: 'bold', color: '#4F46E5', fontSize: '14px' }}>
             ¿Para qué sirve?
           </p>
-          <ul style={{ margin: '8px 0 0 0', paddingLeft: '20px' }}>
+          <ul style={{ margin: '8px 0 0 0', paddingLeft: '18px', fontSize: '13px' }}>
             <li>Controlar slides desde tu celular</li>
             <li>Generar ejemplos con IA durante la clase</li>
             <li>Crear preguntas de evaluación al instante</li>
           </ul>
         </div>
 
-        <div style={{
-          background: '#FEF3C7',
-          padding: '12px',
-          borderRadius: '8px',
-          marginTop: '12px',
-          border: '1px solid #F59E0B'
-        }}>
-          <p style={{ margin: 0, fontSize: '14px' }}>
-            <strong>Importante:</strong> Si no tienes Telegram, descárgalo antes de continuar.
-          </p>
-        </div>
-
-        <p className="tutorial-action-hint" style={{ marginTop: '15px' }}>
+        <p className="tutorial-action-hint" style={{ marginTop: '12px', fontSize: '14px' }}>
           <strong>Presiona "Siguiente" para ver cómo conectar</strong>
         </p>
       </div>
     ),
-    placement: 'top',
+    placement: 'right', // 🔧 CAMBIO: 'right' para que el tooltip esté al lado del botón
+    disableBeacon: true,
     spotlightClicks: false,
+    disableScrolling: true, // 🔧 CRÍTICO: Desactivar scroll en este paso
     styles: {
       options: {
         zIndex: 10000,
@@ -262,45 +252,49 @@ export const tutorialSteps: Step[] = [
         <h2>Escanea el Código QR</h2>
         <p>Para conectar tu cuenta de Telegram:</p>
         
-        <ol style={{ marginTop: '15px' }}>
+        <ol style={{ marginTop: '12px', paddingLeft: '20px', fontSize: '14px' }}>
           <li><strong>Escanea el código QR</strong> con la cámara de tu celular</li>
         </ol>
 
         <div style={{
           background: '#DBEAFE',
-          padding: '15px',
+          padding: '12px',
           borderRadius: '8px',
-          marginTop: '15px',
+          marginTop: '12px',
           border: '1px solid #3B82F6'
         }}>
-          <p style={{ margin: 0, fontWeight: 'bold', color: '#1E40AF' }}>
+          <p style={{ margin: 0, fontWeight: 'bold', color: '#1E40AF', fontSize: '13px' }}>
             El bot se llama:
           </p>
-          <p style={{ margin: '5px 0 0 0', fontSize: '16px', fontFamily: 'monospace', color: '#1E40AF' }}>
+          <p style={{ margin: '5px 0 0 0', fontSize: '14px', fontFamily: 'monospace', color: '#1E40AF' }}>
             @class_assistant_labonso_bot
           </p>
         </div>
 
-        <p className="tutorial-action-hint" style={{ marginTop: '15px' }}>
+        <p className="tutorial-action-hint" style={{ marginTop: '12px', fontSize: '14px' }}>
           <strong>Presiona "Siguiente" para ver los controles disponibles</strong>
         </p>
       </div>
     ),
-    placement: 'center', // 🔧 CRÍTICO: 'center' en vez de 'right' para evitar scroll
+    placement: 'right', // 🔧 CAMBIO: 'right' para estar al lado del modal
     disableBeacon: true,
     disableOverlay: false,
     spotlightClicks: false,
-    disableScrolling: true, // 🆕 Solo desactivar scroll en ESTE paso específico
+    disableScrolling: true, // 🔧 CRÍTICO: Desactivar scroll
     styles: {
       options: {
-        zIndex: 10000, // 🔧 CAMBIO: Mantener igual que el global (no mayor al modal)
+        zIndex: 10000,
       },
       spotlight: {
         borderRadius: '16px',
       },
+      tooltip: {
+        maxWidth: '380px', // 🔧 NUEVO: Limitar ancho del tooltip
+      },
     },
     floaterProps: {
       disableAnimation: true,
+      offset: 15, // 🔧 NUEVO: Separación del modal
     },
   },
 
@@ -314,135 +308,152 @@ export const tutorialSteps: Step[] = [
 
         <div style={{
           background: '#F3F4F6',
-          padding: '15px',
+          padding: '12px',
           borderRadius: '8px',
-          marginTop: '15px'
+          marginTop: '12px'
         }}>
-          <p style={{ margin: 0, fontWeight: 'bold', fontSize: '15px' }}>
+          <p style={{ margin: 0, fontWeight: 'bold', fontSize: '14px' }}>
             Listar tus clases:
           </p>
           <div style={{
             background: '#1F2937',
-            padding: '10px',
+            padding: '8px',
             borderRadius: '6px',
             marginTop: '8px',
             fontFamily: 'monospace',
-            color: '#10B981'
+            color: '#10B981',
+            fontSize: '13px'
           }}>
             /listclasses
           </div>
-          <p style={{ margin: '8px 0 0 0', fontSize: '14px', color: '#6B7280' }}>
+          <p style={{ margin: '8px 0 0 0', fontSize: '13px', color: '#6B7280' }}>
             Muestra todas tus clases para seleccionar cuál controlar
           </p>
         </div>
 
         <div style={{
           background: '#F3F4F6',
-          padding: '15px',
+          padding: '12px',
           borderRadius: '8px',
-          marginTop: '12px'
+          marginTop: '10px'
         }}>
-          <p style={{ margin: 0, fontWeight: 'bold', fontSize: '15px' }}>
+          <p style={{ margin: 0, fontWeight: 'bold', fontSize: '14px' }}>
             Botones de navegación:
           </p>
-          <ul style={{ margin: '8px 0 0 0', paddingLeft: '20px', fontSize: '14px' }}>
+          <ul style={{ margin: '8px 0 0 0', paddingLeft: '20px', fontSize: '13px' }}>
             <li><strong>⏮️ Anterior:</strong> Retroceder un slide</li>
             <li><strong>⏭️ Siguiente:</strong> Avanzar un slide</li>
           </ul>
         </div>
 
-        <p className="tutorial-action-hint" style={{ marginTop: '15px' }}>
+        <p className="tutorial-action-hint" style={{ marginTop: '12px', fontSize: '14px' }}>
           <strong>Presiona "Siguiente" para conocer los comandos IA</strong>
         </p>
       </div>
     ),
     placement: 'center',
+    styles: {
+      tooltip: {
+        maxWidth: '480px', // 🔧 NUEVO: Limitar ancho
+      },
+    },
   },
 
-  // PASO 16: Comandos IA (/ejemplo, /pregunta y /resumen)
+  // PASO 16: Comandos IA (🔧 ARREGLADO: Reducir tamaño)
   {
     target: 'body',
     content: (
       <div>
-        <h2>Comandos con Inteligencia Artificial</h2>
-        <p>El bot incluye comandos potenciados por IA para ayudarte durante la clase:</p>
+        <h2 style={{ fontSize: '20px', marginBottom: '10px' }}>Comandos con IA</h2>
+        <p style={{ fontSize: '14px', margin: '0 0 12px 0' }}>
+          El bot incluye comandos potenciados por IA:
+        </p>
         
-        <div style={{ marginTop: '15px' }}>
+        <div style={{ marginTop: '10px' }}>
           <div style={{
             background: '#DBEAFE',
-            padding: '15px',
+            padding: '10px',
             borderRadius: '8px',
-            marginBottom: '12px',
-            border: '2px solid #3B82F6'
+            marginBottom: '8px',
+            border: '1px solid #3B82F6'
           }}>
             <div style={{
               background: '#1E40AF',
-              padding: '8px 12px',
+              padding: '4px 10px',
               borderRadius: '6px',
-              marginBottom: '10px',
+              marginBottom: '6px',
               fontFamily: 'monospace',
               color: 'white',
-              display: 'inline-block'
+              display: 'inline-block',
+              fontSize: '13px'
             }}>
               /ejemplo
             </div>
-            <p style={{ margin: '10px 0 0 0', fontSize: '14px', color: '#1E3A8A' }}>
-              Genera un <strong>ejemplo práctico</strong> basado en el contenido del slide actual.
+            <p style={{ margin: '6px 0 0 0', fontSize: '13px', color: '#1E3A8A' }}>
+              Genera un <strong>ejemplo práctico</strong> del slide actual
             </p>
           </div>
 
           <div style={{
             background: '#DCFCE7',
-            padding: '15px',
+            padding: '10px',
             borderRadius: '8px',
-            marginBottom: '12px',
-            border: '2px solid #10B981'
+            marginBottom: '8px',
+            border: '1px solid #10B981'
           }}>
             <div style={{
               background: '#065F46',
-              padding: '8px 12px',
+              padding: '4px 10px',
               borderRadius: '6px',
-              marginBottom: '10px',
+              marginBottom: '6px',
               fontFamily: 'monospace',
               color: 'white',
-              display: 'inline-block'
+              display: 'inline-block',
+              fontSize: '13px'
             }}>
               /pregunta
             </div>
-            <p style={{ margin: '10px 0 0 0', fontSize: '14px', color: '#065F46' }}>
-              Crea una <strong>pregunta de evaluación</strong> sobre el slide actual.
+            <p style={{ margin: '6px 0 0 0', fontSize: '13px', color: '#065F46' }}>
+              Crea una <strong>pregunta de evaluación</strong>
             </p>
           </div>
 
           <div style={{
             background: '#FEF3C7',
-            padding: '15px',
+            padding: '10px',
             borderRadius: '8px',
-            border: '2px solid #F59E0B'
+            border: '1px solid #F59E0B'
           }}>
             <div style={{
               background: '#D97706',
-              padding: '8px 12px',
+              padding: '4px 10px',
               borderRadius: '6px',
-              marginBottom: '10px',
+              marginBottom: '6px',
               fontFamily: 'monospace',
               color: 'white',
-              display: 'inline-block'
+              display: 'inline-block',
+              fontSize: '13px'
             }}>
               /resumen
             </div>
-            <p style={{ margin: '10px 0 0 0', fontSize: '14px', color: '#92400E' }}>
-              Genera un <strong>resumen completo</strong> de toda la presentación.
+            <p style={{ margin: '6px 0 0 0', fontSize: '13px', color: '#92400E' }}>
+              Genera un <strong>resumen completo</strong> de la presentación
             </p>
           </div>
         </div>
 
-        <p className="tutorial-action-hint" style={{ marginTop: '15px' }}>
+        <p className="tutorial-action-hint" style={{ marginTop: '12px', fontSize: '14px' }}>
           <strong>Presiona "Siguiente" para ver el flujo recomendado</strong>
         </p>
       </div>
     ),
     placement: 'center',
+    styles: {
+      tooltip: {
+        maxWidth: '420px', // 🔧 CRÍTICO: Reducir ancho máximo del tooltip
+        padding: '16px', // 🔧 NUEVO: Reducir padding interno
+      },
+    },
   },
 
   // PASO 17: Consejo de uso (Conectar primero, luego iniciar clase)
@@ -455,51 +466,44 @@ export const tutorialSteps: Step[] = [
 
         <div style={{
           background: '#F9FAFB',
-          padding: '20px',
+          padding: '15px',
           borderRadius: '12px',
-          marginTop: '15px',
+          marginTop: '12px',
           border: '2px solid #E5E7EB'
         }}>
-          <ol style={{ margin: 0, paddingLeft: '20px', fontSize: '15px', lineHeight: '1.8' }}>
+          <ol style={{ margin: 0, paddingLeft: '20px', fontSize: '14px', lineHeight: '1.7' }}>
             <li>
               <strong>Conecta Telegram primero</strong>
-              <p style={{ margin: '4px 0 12px 0', color: '#6B7280', fontSize: '14px' }}>
+              <p style={{ margin: '4px 0 10px 0', color: '#6B7280', fontSize: '13px' }}>
                 Escanea el QR y vincula tu cuenta antes de iniciar la clase
               </p>
             </li>
             <li>
               <strong>Selecciona tu clase en Telegram</strong>
-              <p style={{ margin: '4px 0 12px 0', color: '#6B7280', fontSize: '14px' }}>
+              <p style={{ margin: '4px 0 10px 0', color: '#6B7280', fontSize: '13px' }}>
                 Usa <code style={{ background: '#E5E7EB', padding: '2px 6px', borderRadius: '4px' }}>/listclasses</code> para elegir qué clase presentar
               </p>
             </li>
             <li>
               <strong>Inicia la presentación</strong>
-              <p style={{ margin: '4px 0 0 0', color: '#6B7280', fontSize: '14px' }}>
+              <p style={{ margin: '4px 0 0 0', color: '#6B7280', fontSize: '13px' }}>
                 Presiona el botón "Iniciar" en la tarjeta de tu clase
               </p>
             </li>
           </ol>
         </div>
 
-        <div style={{
-          background: '#EEF2FF',
-          padding: '12px',
-          borderRadius: '8px',
-          marginTop: '15px',
-          border: '1px solid #C7D2FE'
-        }}>
-          <p style={{ margin: 0, fontSize: '14px', color: '#4338CA' }}>
-            <strong>Tip:</strong> Mantén tu celular cerca durante la presentación para usar los comandos IA en tiempo real
-          </p>
-        </div>
-
-        <p className="tutorial-action-hint" style={{ marginTop: '15px' }}>
+        <p className="tutorial-action-hint" style={{ marginTop: '12px', fontSize: '14px' }}>
           <strong>Presiona "Siguiente" para finalizar el tutorial</strong>
         </p>
       </div>
     ),
     placement: 'center',
+    styles: {
+      tooltip: {
+        maxWidth: '480px',
+      },
+    },
   },
 
   // ========== CONCLUSIÓN FINAL (Paso 18) ==========
