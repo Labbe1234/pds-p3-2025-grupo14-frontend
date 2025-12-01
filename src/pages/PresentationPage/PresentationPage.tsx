@@ -243,7 +243,7 @@ const PresentationPage = () => {
           }
 
           // Registrar listener de cambio de slide
-          deck.on('slidechanged', () => {
+          deck.on('slidechanged', (event: any) => {
             if (classData?.id) {
               const indices = deck.getIndices();
 

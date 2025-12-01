@@ -15,8 +15,8 @@ const ClasesPage = () => {
   const [file, setFile] = useState<File | null>(null)
   const [classes, setClasses] = useState<ClassData[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [isSaving, setIsSaving] = useState(false) // Nuevo estado
-  const [savingProgress, setSavingProgress] = useState('') // Nuevo estado para mensaje de progreso
+  const [isSaving, setIsSaving] = useState(false)
+  const [savingProgress, setSavingProgress] = useState('')
 
   useEffect(() => {
     loadClasses()
@@ -211,6 +211,13 @@ const ClasesPage = () => {
     return labels[level as keyof typeof labels] || level
   }
 
+  // 🆕 Función para manejar clic en "Crear Primera Clase"
+  const handleCreateClick = () => {
+    // Solo abrimos el formulario
+    // Joyride manejará el avance automáticamente gracias a spotlightClicks: true
+    setShowCreateForm(true);
+  };
+
   if (isLoading) {
     return (
       <div className="clases-page">
@@ -245,7 +252,6 @@ const ClasesPage = () => {
         <div className="create-class-section">
           <h2>{editingClass ? 'Editar Clase' : 'Crear Nueva Clase'}</h2>
           
-          {/* Indicador de progreso */}
           {isSaving && (
             <div className="saving-indicator">
               <div className="spinner"></div>
@@ -301,7 +307,7 @@ const ClasesPage = () => {
               <label htmlFor="presentation">
                 {editingClass ? 'Cambiar Presentación (opcional)' : 'Subir Presentación'}
               </label>
-              <div className="file-upload-container">
+              <div className="file-upload-container" id="file-upload-container"> {/* 🆕 */}
                 <input
                   type="file"
                   id="presentation"
@@ -334,7 +340,7 @@ const ClasesPage = () => {
             </div>
 
             <div className="form-actions">
-              <button type="submit" className="btn-submit" disabled={isSaving}>
+              <button type="submit" className="btn-submit btn-crear-clase" disabled={isSaving}>
                 {isSaving 
                   ? ' Procesando...' 
                   : editingClass 
@@ -355,8 +361,8 @@ const ClasesPage = () => {
               <h3>No tienes clases creadas</h3>
               <p>Comienza creando tu primera clase</p>
               <button 
-                className="btn-create-first"
-                onClick={() => setShowCreateForm(true)}
+                className="btn-create-first btn-crear-primera-clase"
+                onClick={handleCreateClick} // 🆕 Usar nueva función
               >
                 <Plus size={20} /> Crear Primera Clase
               </button>
@@ -384,7 +390,7 @@ const ClasesPage = () => {
                   
                   <div className="class-actions">
                     <button 
-                      className="btn-action btn-start"
+                      className="btn-action btn-start btn-iniciar-clase"
                       onClick={() => handleStartClass(classItem)}
                       disabled={!classItem.slides_count || classItem.slides_count === 0}
                       title={
@@ -412,8 +418,8 @@ const ClasesPage = () => {
               ))}
 
               <div 
-                className="class-card create-card"
-                onClick={() => setShowCreateForm(true)}
+                className="class-card create-card btn-crear-primera-clase"
+                onClick={handleCreateClick} // 🆕 Usar nueva función
               >
                 <div className="create-card-content">
                   <Plus size={64} strokeWidth={2} className="create-icon" />

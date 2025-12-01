@@ -22,6 +22,15 @@ export interface Slide {
   notes?: string;
 }
 
+// ✅ NUEVO: Interfaz para usuario
+export interface User {
+  id: number;
+  email: string;
+  name: string;
+  picture_url?: string;
+  tutorial_completed?: boolean; // ✅ Campo tutorial
+}
+
 const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -166,7 +175,6 @@ export const classesAPI = {
     await api.delete(`/clases/${id}`)
   },
 
-  // ✅ NUEVO MÉTODO: Sincronizar slide actual
   sync: async (id: string, currentSlide: number, totalSlides: number, sessionId?: number): Promise<void> => {
     if (USE_MOCK) return
     await api.post(`/clases/${id}/sync`, {
@@ -222,6 +230,27 @@ export const sessionsAPI = {
   getAll: async (): Promise<any[]> => {
     if (USE_MOCK) return []
     const response = await api.get('/sessions')
+    return response.data
+  }
+}
+
+// ✅ NUEVO: API de usuarios y tutorial
+export const usersAPI = {
+  // Obtener perfil del usuario actual
+  getProfile: async (): Promise<{ user: User }> => {
+    const response = await api.get<{ user: User }>('/users/me')
+    return response.data
+  },
+
+  // Marcar tutorial como completado
+  completeTutorial: async (): Promise<{ tutorial_completed: boolean }> => {
+    const response = await api.post<{ tutorial_completed: boolean }>('/users/me/complete_tutorial')
+    return response.data
+  },
+
+  // Actualizar perfil
+  updateProfile: async (data: Partial<User>): Promise<{ user: User }> => {
+    const response = await api.patch<{ user: User }>('/users/me', { user: data })
     return response.data
   }
 }

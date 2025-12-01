@@ -2,6 +2,10 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './contexts/AuthContext';
+import { TutorialProvider } from './contexts/TutorialContext';
+import { tutorialSteps } from './components/Tutorial/tutorialSteps';
+import TutorialWrapper from './components/Tutorial/TutorialWrapper';
+import TutorialHelpButton from './components/Tutorial/TutorialHelpButton';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import LoginPage from './pages/LoginPage/LoginPage';
 import HomePage from './pages/HomePage/HomePage';
@@ -34,70 +38,75 @@ VITE_API_URL=http://localhost:3000`}
     <GoogleOAuthProvider clientId={clientId}>
       <AuthProvider>
         <Router>
-          <Routes>
-            {/* Ruta pública: Login */}
-            <Route path="/login" element={<LoginPage />} />
+          {/* TutorialProvider DENTRO del Router (para acceso a useNavigate) */}
+          <TutorialProvider steps={tutorialSteps}>
+            <TutorialWrapper />
+            <TutorialHelpButton />
+            <Routes>
+              {/* Ruta pública: Login */}
+              <Route path="/login" element={<LoginPage />} />
 
-            {/* Rutas protegidas con Layout (Navbar + Footer) */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <AppLayout>
-                    <HomePage />
-                  </AppLayout>
-                </ProtectedRoute>
-              }
-            />
+              {/* Rutas protegidas con Layout (Navbar + Footer) */}
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <HomePage />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              
+              <Route
+                path="/clases"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <ClasesPage />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              
+              {/* Presentation sin Layout (fullscreen) */}
+              <Route
+                path="/clases/:id/presentation"
+                element={
+                  <ProtectedRoute>
+                    <PresentationPage />
+                  </ProtectedRoute>
+                }
+              />
 
-            <Route
-              path="/clases"
-              element={
-                <ProtectedRoute>
-                  <AppLayout>
-                    <ClasesPage />
-                  </AppLayout>
-                </ProtectedRoute>
-              }
-            />
+              {/* Reporte de Clase - NUEVA RUTA DE DEPLOY */}
+              <Route
+                path="/sessions/:sessionId"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <ClassReportPage />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* Presentation sin Layout (fullscreen) */}
-            <Route
-              path="/clases/:id/presentation"
-              element={
-                <ProtectedRoute>
-                  <PresentationPage />
-                </ProtectedRoute>
-              }
-            />
+              {/* Lista de Reportes - NUEVA RUTA DE DEPLOY */}
+              <Route
+                path="/reports"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <ClassReportsListPage />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* Reporte de Clase */}
-            <Route
-              path="/sessions/:sessionId"
-              element={
-                <ProtectedRoute>
-                  <AppLayout>
-                    <ClassReportPage />
-                  </AppLayout>
-                </ProtectedRoute>
-              }
-            />
-
-            {/* Lista de Reportes */}
-            <Route
-              path="/reports"
-              element={
-                <ProtectedRoute>
-                  <AppLayout>
-                    <ClassReportsListPage />
-                  </AppLayout>
-                </ProtectedRoute>
-              }
-            />
-
-            {/* Ruta por defecto */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+              {/* Ruta por defecto */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </TutorialProvider>
         </Router>
       </AuthProvider>
     </GoogleOAuthProvider>
