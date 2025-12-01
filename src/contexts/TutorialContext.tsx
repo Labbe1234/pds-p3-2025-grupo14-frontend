@@ -1,9 +1,9 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import type { ReactNode } from 'react';
 import type { CallBackProps, Step } from 'react-joyride';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { usersAPI } from '../services/api'; // ✅ Importar API
-import { useAuth } from './AuthContext'; // ✅ Importar hook de autenticación
+import { usersAPI } from '../services/api';
+import { useAuth } from './AuthContext';
 
 interface TutorialContextType {
   run: boolean;
@@ -39,13 +39,12 @@ const STEP_ROUTES: { [key: number]: string } = {
   10: '/clases', // Botón: Crear Clase
   11: '/clases', // Estado: Procesando
   12: '/clases', // Tarjeta: Clase creada
-  13: '/clases', // Telegram: Descargar y buscar bot
-  14: '/clases', // Telegram: Conectar bot
-  15: '/clases', // Telegram: Comando /listclasses
-  16: '/clases', // Telegram: Botones navegación
-  17: '/clases', // Telegram: Comandos /ejemplo y /pregunta
-  18: '/clases', // Telegram: Flujo completo
-  19: '/clases', // Conclusión final
+  13: '/clases', // Telegram: Botón flotante
+  14: '/clases', // Telegram: Modal QR
+  15: '/clases', // Telegram: Comando /listclases
+  16: '/clases', // Telegram: Comandos IA
+  17: '/clases', // Telegram: Flujo completo
+  18: '/clases', // Conclusión final
 };
 
 export const TutorialProvider = ({ children, steps: initialSteps }: TutorialProviderProps) => {
@@ -54,9 +53,12 @@ export const TutorialProvider = ({ children, steps: initialSteps }: TutorialProv
   const [steps, setSteps] = useState<Step[]>(initialSteps);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, refreshUser } = useAuth(); // ✅ Obtener usuario del contexto
+  const { user, refreshUser } = useAuth();
+  
+  // Flag para indicar que estamos en transición automática
+  const isAutoTransitioning = useRef(false);
 
-  // ✅ NUEVO: Auto-iniciar tutorial si el usuario NO lo ha completado
+  // Auto-iniciar tutorial si el usuario NO lo ha completado
   useEffect(() => {
     const shouldAutoStart = user && !user.tutorial_completed;
     
@@ -72,6 +74,9 @@ export const TutorialProvider = ({ children, steps: initialSteps }: TutorialProv
 
   // Reanudar tutorial al cambiar de ruta
   useEffect(() => {
+    // NO reanudar si estamos en transición automática
+    if (isAutoTransitioning.current) return;
+    
     if (!run && stepIndex > 0) {
       const expectedRoute = STEP_ROUTES[stepIndex];
       
@@ -85,6 +90,128 @@ export const TutorialProvider = ({ children, steps: initialSteps }: TutorialProv
       }
     }
   }, [location.pathname, stepIndex, run]);
+
+  // Esperar a que el modal del formulario se abra (Paso 6)
+  useEffect(() => {
+    // Solo activar si estamos en paso 6 y el tutorial está PAUSADO
+    if (stepIndex !== 6 || run) return;
+
+    console.log('⏳ Paso 6: Esperando a que el modal de crear clase se abra...');
+    
+    // Polling para detectar cuando el modal está listo
+    const checkModalInterval = setInterval(() => {
+      const nameInput = document.querySelector('#className');
+      
+      if (nameInput) {
+        console.log('✅ Modal de crear clase abierto y listo, reanudando tutorial en paso 6');
+        clearInterval(checkModalInterval);
+        
+        setTimeout(() => {
+          setRun(true);
+        }, 300);
+      }
+    }, 100);
+
+    // Timeout de seguridad (5 segundos)
+    const timeout = setTimeout(() => {
+      clearInterval(checkModalInterval);
+      console.warn('⚠️ Timeout: Modal de crear clase no detectado, reanudando de todas formas');
+      setRun(true);
+    }, 5000);
+
+    // Cleanup
+    return () => {
+      clearInterval(checkModalInterval);
+      clearTimeout(timeout);
+    };
+  }, [stepIndex, run]);
+
+  // 🔧 NUEVO: Esperar a que el modal de Telegram se abra (Paso 14)
+  useEffect(() => {
+    // Solo activar si estamos en paso 14 y el tutorial está PAUSADO
+    if (stepIndex !== 14 || run) return;
+
+    console.log('⏳ Paso 14: Esperando a que el modal de Telegram se abra...');
+    
+    // Polling para detectar cuando el modal está listo
+    const checkTelegramModalInterval = setInterval(() => {
+      const telegramModal = document.querySelector('.telegram-modal');
+      
+      if (telegramModal) {
+        console.log('✅ Modal de Telegram abierto y listo, reanudando tutorial en paso 14');
+        clearInterval(checkTelegramModalInterval);
+        
+        setTimeout(() => {
+          setRun(true);
+        }, 300);
+      }
+    }, 100);
+
+    // Timeout de seguridad (5 segundos)
+    const timeout = setTimeout(() => {
+      clearInterval(checkTelegramModalInterval);
+      console.warn('⚠️ Timeout: Modal de Telegram no detectado, reanudando de todas formas');
+      setRun(true);
+    }, 5000);
+
+    // Cleanup
+    return () => {
+      clearInterval(checkTelegramModalInterval);
+      clearTimeout(timeout);
+    };
+  }, [stepIndex, run]);
+
+  // Avanzar automáticamente cuando la clase se crea (Paso 11 → 12)
+  useEffect(() => {
+    // Solo activar si estamos en paso 11 (procesando clase) y el tutorial está activo
+    if (stepIndex !== 11 || !run) {
+      return;
+    }
+
+    console.log('⏳ PASO 11: Iniciando detector de clase creada...');
+    
+    // Polling para detectar cuando desaparece el indicador de carga y aparece la tarjeta
+    const checkClassCreatedInterval = setInterval(() => {
+      const savingIndicator = document.querySelector('.saving-indicator');
+      const classCard = document.querySelector('.class-card');
+      
+      // Condición: Ya NO hay indicador de carga Y SÍ hay tarjeta de clase
+      if (!savingIndicator && classCard) {
+        console.log('✅ Clase creada detectada, avanzando automáticamente al paso 12');
+        clearInterval(checkClassCreatedInterval);
+        
+        // Desactivar completamente Joyride antes de cambiar el índice
+        setRun(false);
+        
+        // Esperar un momento para que Joyride se desmonte
+        setTimeout(() => {
+          setStepIndex(12);
+          
+          // Activar flag para evitar interferencia del useEffect de reanudación
+          isAutoTransitioning.current = true;
+          
+          // Reactivar Joyride en el paso 12
+          setTimeout(() => {
+            isAutoTransitioning.current = false;
+            setRun(true);
+          }, 500);
+        }, 200);
+      }
+    }, 300);
+
+    // Timeout de seguridad (3 minutos)
+    const timeout = setTimeout(() => {
+      clearInterval(checkClassCreatedInterval);
+      console.warn('⚠️ TIMEOUT: La clase tardó más de 3 minutos en procesarse');
+      isAutoTransitioning.current = false;
+    }, 180000);
+
+    // Cleanup
+    return () => {
+      clearInterval(checkClassCreatedInterval);
+      clearTimeout(timeout);
+    };
+  }, [stepIndex, run]);
 
   const startTutorial = useCallback(() => {
     console.log('🎬 Iniciando tutorial manualmente');
@@ -115,11 +242,9 @@ export const TutorialProvider = ({ children, steps: initialSteps }: TutorialProv
     if (nextIndex >= steps.length) {
       console.log('🎉 Tutorial completado!');
       
-      // ✅ NUEVO: Marcar como completado en el backend
       usersAPI.completeTutorial()
         .then(() => {
           console.log('✅ Tutorial marcado como completado en backend');
-          // Refrescar datos del usuario
           refreshUser();
         })
         .catch((error) => {
@@ -133,6 +258,40 @@ export const TutorialProvider = ({ children, steps: initialSteps }: TutorialProv
 
     const currentRoute = STEP_ROUTES[stepIndex];
     const nextRoute = STEP_ROUTES[nextIndex];
+    
+    // 🔧 CASO ESPECIAL: Del paso 5 al 6 (abrir modal de crear clase)
+    if (stepIndex === 5 && nextIndex === 6) {
+      console.log('🎯 Transición especial: Paso 5 → 6 (abriendo modal de crear clase)');
+      
+      const createButton = document.querySelector('.btn-crear-primera-clase') as HTMLButtonElement;
+      if (createButton) {
+        console.log('✅ Haciendo click en botón crear clase...');
+        createButton.click();
+      } else {
+        console.error('❌ No se encontró el botón .btn-crear-primera-clase');
+      }
+      
+      setStepIndex(nextIndex);
+      setRun(false); // El useEffect se encargará de reanudar cuando el modal esté listo
+      return;
+    }
+
+    // 🔧 NUEVO: CASO ESPECIAL: Del paso 13 al 14 (abrir modal de Telegram)
+    if (stepIndex === 13 && nextIndex === 14) {
+      console.log('🎯 Transición especial: Paso 13 → 14 (abriendo modal de Telegram)');
+      
+      const telegramButton = document.querySelector('.telegram-floating-btn') as HTMLButtonElement;
+      if (telegramButton) {
+        console.log('✅ Haciendo click en botón de Telegram...');
+        telegramButton.click();
+      } else {
+        console.error('❌ No se encontró el botón .telegram-floating-btn');
+      }
+      
+      setStepIndex(nextIndex);
+      setRun(false); // El useEffect se encargará de reanudar cuando el modal esté listo
+      return;
+    }
     
     if (nextRoute && currentRoute !== nextRoute && location.pathname !== nextRoute) {
       console.log(`🔀 Cambiando de ruta: ${currentRoute} → ${nextRoute}`);
@@ -169,15 +328,12 @@ export const TutorialProvider = ({ children, steps: initialSteps }: TutorialProv
         }
       }
     } 
-    // ✅ MEJORADO: Manejar cierre/finalización del tutorial
     else if (status === 'finished' || status === 'skipped' || action === 'close') {
       console.log('❌ Tutorial cerrado/completado por el usuario');
       
-      // ✅ NUEVO: Marcar como completado en el backend
       usersAPI.completeTutorial()
         .then(() => {
           console.log('✅ Tutorial marcado como completado en backend');
-          // Refrescar datos del usuario
           refreshUser();
         })
         .catch((error) => {
