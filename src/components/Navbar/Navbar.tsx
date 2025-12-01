@@ -25,7 +25,7 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="navbar-container">
         {/* Logo */}
-        <div className="navbar-logo" onClick={() => handleNavigation('/')}>
+        <div className="navbar-logo navbar-inicio" onClick={() => handleNavigation('/')}>
           <svg className="logo-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
@@ -49,13 +49,13 @@ const Navbar = () => {
         {/* Links de navegación */}
         <div className={`navbar-menu ${isMenuOpen ? 'open' : ''}`}>
           <button
-            className={`navbar-link ${isActive('/') ? 'active' : ''}`}
+            className={`navbar-link navbar-inicio ${isActive('/') ? 'active' : ''}`}
             onClick={() => handleNavigation('/')}
           >
             Inicio
           </button>
           <button
-            className={`navbar-link ${isActive('/clases') ? 'active' : ''}`}
+            className={`navbar-link navbar-clases ${isActive('/clases') ? 'active' : ''}`}
             onClick={() => handleNavigation('/clases')}
           >
             Mis Clases

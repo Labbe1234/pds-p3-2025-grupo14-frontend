@@ -19,3 +19,33 @@ main {
   margin: 0;
   padding: 0;
 }
+
+/* ========== TUTORIAL STYLES ========== */
+
+/* Hint para acciones del usuario */
+.tutorial-action-hint {
+  background: #eef2ff;
+  border-left: 4px solid #4f46e5;
+  padding: 12px;
+  margin-top: 15px;
+  border-radius: 4px;
+  font-weight: 600;
+  color: #4f46e5;
+  animation: pulse-hint 2s infinite;
+}
+
+@keyframes pulse-hint {
+  0%,
+  100% {
+    background: #eef2ff;
+  }
+  50% {
+    background: #e0e7ff;
+  }
+}
+
+/* Mejorar visibilidad de elementos destacados */
+.__floater__open .card-link-btn {
+  position: relative;
+  z-index: 10001;
+}

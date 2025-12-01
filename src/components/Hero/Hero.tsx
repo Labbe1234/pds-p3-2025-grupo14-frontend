@@ -2,7 +2,6 @@ import './Hero.css';
 import { ArrowRight } from 'lucide-react';
 
 const Hero = () => {
-
   const scrollToCards = () => {
     const cardsSection = document.getElementById('clases');
     cardsSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -15,7 +14,7 @@ const Hero = () => {
         <p className="hero-subtitle">
           Gestiona tus presentaciones de clase de forma sencilla y efectiva
         </p>
-        <button className="hero-cta" onClick={scrollToCards}>
+        <button className="hero-cta btn-comenzar" onClick={scrollToCards}>
           Comenzar <ArrowRight size={16} />
         </button>
       </div>

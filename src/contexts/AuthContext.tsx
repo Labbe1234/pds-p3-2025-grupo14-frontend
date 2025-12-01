@@ -1,17 +1,12 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { jwtDecode } from 'jwt-decode';
+import { usersAPI } from '../services/api'; // ✅ Solo importar usersAPI
+import type { User } from '../services/api'; // ✅ Importar User como tipo
 
 // ====================
 // TIPOS
 // ====================
-
-interface User {
-  id: number;
-  email: string;
-  name: string;
-  picture_url: string;
-}
 
 interface AuthContextType {
   user: User | null;
@@ -20,6 +15,7 @@ interface AuthContextType {
   logout: () => void;
   getToken: () => string | null;
   isAuthenticated: () => boolean;
+  refreshUser: () => Promise<void>;
 }
 
 interface LoginResult {
@@ -64,7 +60,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // ====================
 
   useEffect(() => {
-    const initAuth = () => {
+    const initAuth = async () => {
       console.log('🔍 Inicializando autenticación...');
 
       const token = localStorage.getItem('token');
@@ -77,11 +73,23 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           const now = Date.now() / 1000;
 
           if (decoded.exp && decoded.exp > now) {
-            const userDataStr = localStorage.getItem('user');
-            if (userDataStr) {
-              const userData = JSON.parse(userDataStr) as User;
+            // ✅ Obtener perfil actualizado desde el backend
+            try {
+              const { user: userData } = await usersAPI.getProfile();
               setUser(userData);
-              console.log('✅ Usuario restaurado:', userData.email);
+              localStorage.setItem('user', JSON.stringify(userData));
+              console.log('✅ Usuario restaurado desde backend:', userData.email, 'Tutorial:', userData.tutorial_completed);
+            } catch (error) {
+              console.error('❌ Error al obtener perfil:', error);
+              // Fallback: usar datos de localStorage
+              const userDataStr = localStorage.getItem('user');
+              if (userDataStr) {
+                const userData = JSON.parse(userDataStr) as User;
+                setUser(userData);
+                console.log('⚠️ Usuario restaurado desde localStorage (fallback):', userData.email);
+              } else {
+                logout();
+              }
             }
           } else {
             console.log('⏰ Token expirado');
@@ -103,16 +111,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   // ====================
-  // LOGIN - ✅ CORREGIDO AQUÍ
+  // LOGIN
   // ====================
 
   const loginWithGoogle = async (googleCredential: string): Promise<LoginResult> => {
     console.log('🔐 Iniciando login con Google...');
 
     try {
-      // ✅ Usar directamente VITE_API_URL (que ya incluye /api/v1)
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
-      const url = `${apiUrl}/auth/google`; // ← Solo agregar /auth/google
+      const url = `${apiUrl}/auth/google`;
       
       console.log('📡 URL completa:', url);
 
@@ -130,6 +137,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (response.ok) {
         console.log('✅ Login exitoso');
+        console.log('📊 Usuario recibido:', data.user);
 
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
@@ -156,8 +164,26 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('tutorialCompleted');
 
     setUser(null);
+  };
+
+  // ====================
+  // REFRESH USER
+  // ====================
+
+  const refreshUser = async () => {
+    console.log('🔄 Refrescando datos del usuario...');
+    
+    try {
+      const { user: userData } = await usersAPI.getProfile();
+      setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
+      console.log('✅ Usuario actualizado:', userData.email, 'Tutorial:', userData.tutorial_completed);
+    } catch (error) {
+      console.error('❌ Error al refrescar usuario:', error);
+    }
   };
 
   // ====================
@@ -182,7 +208,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     loginWithGoogle,
     logout,
     getToken,
-    isAuthenticated
+    isAuthenticated,
+    refreshUser,
   };
 
   return (

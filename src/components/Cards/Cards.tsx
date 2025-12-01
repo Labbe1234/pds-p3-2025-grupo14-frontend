@@ -22,7 +22,7 @@ const Cards = () => {
           </div>
           <h3>CREA TUS CLASES</h3>
           <p>Crea y gestiona tus clases de forma sencilla.</p>
-          <button className="card-link-btn">Ir a Clases →</button>
+          <button className="card-link-btn btn-ir-clases">Ir a Clases →</button>
         </div>
 
         <div className="card card-clickable" onClick={() => navigate('/reports')}>
