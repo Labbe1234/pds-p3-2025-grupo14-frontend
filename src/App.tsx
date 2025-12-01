@@ -6,6 +6,7 @@ import { TutorialProvider } from './contexts/TutorialContext';
 import { tutorialSteps } from './components/Tutorial/tutorialSteps';
 import TutorialWrapper from './components/Tutorial/TutorialWrapper';
 import TutorialHelpButton from './components/Tutorial/TutorialHelpButton';
+import TelegramConnectButton from './components/TelegramConnectButton/TelegramConnectButton';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import LoginPage from './pages/LoginPage/LoginPage';
 import HomePage from './pages/HomePage/HomePage';
@@ -42,6 +43,9 @@ VITE_API_URL=http://localhost:3000`}
           <TutorialProvider steps={tutorialSteps}>
             <TutorialWrapper />
             <TutorialHelpButton />
+            {/* 👇 Botón flotante de Telegram */}
+            <TelegramConnectButton />
+            
             <Routes>
               {/* Ruta pública: Login */}
               <Route path="/login" element={<LoginPage />} />
