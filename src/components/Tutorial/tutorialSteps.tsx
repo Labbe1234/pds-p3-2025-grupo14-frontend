@@ -286,7 +286,27 @@ export const tutorialSteps: Step[] = [
         </p>
       </div>
     ),
-    placement: 'right',
+    placement: 'right', // 🔧 CAMBIO: Era 'right', pero probar 'center' si sigue fallando
+    disableBeacon: true, // 🆕 Desactivar beacon para evitar animaciones extra
+    disableOverlay: false, // 🆕 Mantener overlay activo
+    spotlightClicks: false, // 🆕 No permitir clicks en el modal durante el tutorial
+    spotlightPadding: 10, // 🆕 Reducir padding del spotlight
+    styles: {
+      options: {
+        zIndex: 10003, // 🔧 CRÍTICO: Mayor que el modal (10002)
+      },
+      spotlight: {
+        borderRadius: '16px', // 🆕 Coincidir con el modal
+      },
+      tooltip: {
+        // 🆕 Asegurar que el tooltip esté bien posicionado
+        maxWidth: '400px',
+      },
+    },
+    floaterProps: {
+      disableAnimation: true, // 🆕 Desactivar animaciones del floater
+      offset: 20, // 🆕 Separación del target
+    },
   },
 
   // PASO 15: Controles de navegación y /listclasses

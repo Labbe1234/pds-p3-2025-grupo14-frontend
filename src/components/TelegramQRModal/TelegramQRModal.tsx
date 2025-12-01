@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { X } from 'lucide-react';
 import './TelegramQRModal.css';
@@ -10,6 +10,17 @@ interface TelegramQRModalProps {
 }
 
 const TelegramQRModal: React.FC<TelegramQRModalProps> = ({ deepLink, webLink, onClose }) => {
+  const [isReady, setIsReady] = useState(false); // 🔧 NUEVO: Estado de carga
+
+  // 🔧 NUEVO: Marcar como listo después de la animación
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 350); // Esperar a que termine la animación slideUp (300ms + margen)
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleCopy = async () => {
     try {
       // Copiar el web_link si existe, sino el deep_link
@@ -23,7 +34,11 @@ const TelegramQRModal: React.FC<TelegramQRModalProps> = ({ deepLink, webLink, on
 
   return (
     <div className="telegram-modal-backdrop" onClick={onClose}>
-      <div className="telegram-modal" onClick={(e) => e.stopPropagation()}>
+      <div 
+        className={`telegram-modal ${isReady ? 'ready' : ''}`} // 🔧 NUEVO: Clase condicional
+        onClick={(e) => e.stopPropagation()}
+        data-ready={isReady} // 🔧 NUEVO: Atributo para el tutorial
+      >
         <div className="telegram-modal-header">
           <h3>Vincular con Telegram</h3>
           <button className="close-btn" onClick={onClose} aria-label="Cerrar">
