@@ -286,26 +286,21 @@ export const tutorialSteps: Step[] = [
         </p>
       </div>
     ),
-    placement: 'right', // 🔧 CAMBIO: Era 'right', pero probar 'center' si sigue fallando
-    disableBeacon: true, // 🆕 Desactivar beacon para evitar animaciones extra
-    disableOverlay: false, // 🆕 Mantener overlay activo
-    spotlightClicks: false, // 🆕 No permitir clicks en el modal durante el tutorial
-    spotlightPadding: 10, // 🆕 Reducir padding del spotlight
+    placement: 'center', // 🔧 CRÍTICO: 'center' en vez de 'right' para evitar scroll
+    disableBeacon: true,
+    disableOverlay: false,
+    spotlightClicks: false,
+    disableScrolling: true, // 🆕 Solo desactivar scroll en ESTE paso específico
     styles: {
       options: {
-        zIndex: 10003, // 🔧 CRÍTICO: Mayor que el modal (10002)
+        zIndex: 10000, // 🔧 CAMBIO: Mantener igual que el global (no mayor al modal)
       },
       spotlight: {
-        borderRadius: '16px', // 🆕 Coincidir con el modal
-      },
-      tooltip: {
-        // 🆕 Asegurar que el tooltip esté bien posicionado
-        maxWidth: '400px',
+        borderRadius: '16px',
       },
     },
     floaterProps: {
-      disableAnimation: true, // 🆕 Desactivar animaciones del floater
-      offset: 20, // 🆕 Separación del target
+      disableAnimation: true,
     },
   },
 

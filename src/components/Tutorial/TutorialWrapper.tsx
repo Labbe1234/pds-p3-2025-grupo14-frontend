@@ -20,8 +20,8 @@ const TutorialWrapper = () => {
       spotlightClicks={false}
       scrollToFirstStep={true}
       scrollOffset={120}
-      disableScrolling={true} // 🔧 CAMBIO: true para evitar scroll automático en el paso del modal
-      disableScrollParentFix={true}
+      disableScrolling={false} // 🔧 CAMBIO: false para permitir scroll automático
+      disableScrollParentFix={false} // 🔧 CAMBIO: false para scroll correcto
       styles={{
         options: {
           primaryColor: '#4F46E5',
