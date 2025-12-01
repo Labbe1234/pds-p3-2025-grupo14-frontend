@@ -231,6 +231,11 @@ export const sessionsAPI = {
     if (USE_MOCK) return []
     const response = await api.get('/sessions')
     return response.data
+  },
+
+  delete: async (sessionId: number): Promise<void> => {
+    if (USE_MOCK) return
+    await api.delete(`/sessions/${sessionId}`)
   }
 }
 
